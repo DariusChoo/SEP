@@ -2,16 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/ManufacturingFacilityHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/ItemSupplierHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/ItemStorageBinHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/PurchaseOrderHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/MessageHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/ReturnHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/ItemHelper.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/EntityManager/MemberEntity.java</file>
-            <file>file:/C:/IslandFurniture_Enterprise-Student.v2/IslandFurniture_Enterprise-Student/IS3102_Project-ejb/src/java/HelperClasses/ItemCountryHelper.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

@@ -113,16 +113,16 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
-    
-        //this function is used by ECommerce_GetMember to retrieve Member data
+
+    //this function is used by ECommerce_GetMember to retrieve Member data
     @GET
     @Path("getMember")
     @Produces("application/json")
     public Response getMember(@QueryParam("email") String email) {
-        
+
         System.out.println("Reached service");
         System.out.println("Checking Query param: " + email);
-        
+
         try {
             Member member = new Member();
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/islandfurniture-it07?zeroDateTimeBehavior=convertToNull&user=root&password=12345");
@@ -131,37 +131,96 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 member = new Member();
-                if(rs.getString("ADDRESS")!=null){member.setAddress(rs.getString("ADDRESS"));}else{member.setAddress("null");}
+                if (rs.getString("ADDRESS") != null) {
+                    member.setAddress(rs.getString("ADDRESS"));
+                } else {
+                    member.setAddress("null");
+                }
                 Integer age = rs.getInt("AGE");
-                if(age!=null){member.setAge(rs.getInt("AGE"));}else{member.setAge(0);}
-                if(rs.getString("CITY")!=null){member.setCity(rs.getString("CITY"));}else{member.setCity("null");}
+                if (age != null) {
+                    member.setAge(rs.getInt("AGE"));
+                } else {
+                    member.setAge(0);
+                }
+                if (rs.getString("CITY") != null) {
+                    member.setCity(rs.getString("CITY"));
+                } else {
+                    member.setCity("null");
+                }
                 member.setCumulativeSpending(rs.getDouble("CUMULATIVESPENDING"));
                 member.setEmail(rs.getString("EMAIL"));
                 Integer income = rs.getInt("INCOME");
-                if(income!=null){member.setIncome(rs.getInt("INCOME"));}else{member.setIncome(0);}
+                if (income != null) {
+                    member.setIncome(rs.getInt("INCOME"));
+                } else {
+                    member.setIncome(0);
+                }
                 member.setLoyaltyPoints(rs.getInt("LOYALTYPOINTS"));
-                if(rs.getString("NAME")!=null){member.setName(rs.getString("NAME"));}else{member.setName("null");}
-                if(rs.getString("PHONE")!=null){member.setPhone(rs.getString("PHONE"));}else{member.setPhone("null");}
+                if (rs.getString("NAME") != null) {
+                    member.setName(rs.getString("NAME"));
+                } else {
+                    member.setName("null");
+                }
+                if (rs.getString("PHONE") != null) {
+                    member.setPhone(rs.getString("PHONE"));
+                } else {
+                    member.setPhone("null");
+                }
             }
-            
-            System.out.println("Finished rs.next(). Member email = "+member.getEmail());
+
+            System.out.println("Finished rs.next(). Member email = " + member.getEmail());
             return Response.ok(member, MediaType.APPLICATION_JSON).build();
         } catch (Exception ex) {
             ex.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        
-//        try {
-//            Query q = em.createQuery("SELECT * FROM memberentity m WHERE m.EMAIL=?");
-//            q.setParameter("email", email);
-//            Memberentity member = (Memberentity) q.getSingleResult();
-//            return Response.ok(member, MediaType.APPLICATION_JSON).build();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
+    }
+
+    //this function is used by ECommerce_MemberEditProfileServlet to edit Member data
+    @PUT
+    @Path("editMember")
+    @Consumes("application/json")
+    public Response editMember(@QueryParam("name") String name, @QueryParam("email") String email, @QueryParam("phone") String phone, @QueryParam("city") String city, @QueryParam("address") String address, @QueryParam("securityQuestion") String securityQuestion, @QueryParam("securityAnswer") String securityAnswer, @QueryParam("age") int age, @QueryParam("income") int income, @QueryParam("serviceLevelAgreement") int serviceLevelAgreement, @QueryParam("password") String password) {
+
+        System.out.println("Edit service");
+        System.out.println("Checking Query param: " + name + email + phone + city + address + securityQuestion + securityAnswer + age + income + serviceLevelAgreement + password);
+
+        try {
+            Member member = new Member();
+            String passwordSalt = generatePasswordSalt();
+            String passwordHash = generatePasswordHash(passwordSalt, password);
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/islandfurniture-it07?zeroDateTimeBehavior=convertToNull&user=root&password=12345");
+            String stmt = "UPDATE `islandfurniture-it07`.memberentity m SET NAME=?, EMAIL=?, PHONE=?, CITY=?, ADDRESS=?, SECURITYQUESTION=?, SECURITYANSWER=?, AGE=?, INCOME=?, SERVICELEVELAGREEMENT=?, PASSWORDHASH=?, PASSWORDSALT=? WHERE m.EMAIL=?";
+            PreparedStatement ps = conn.prepareStatement(stmt);
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            ps.setString(4, city);
+            ps.setString(5, address);
+            ps.setString(6, securityQuestion);
+            ps.setString(7, securityAnswer);
+            ps.setInt(8, age);
+            ps.setInt(9, income);
+            ps.setInt(10, serviceLevelAgreement);
+            ps.setString(11, passwordSalt);
+            ps.setString(12, passwordHash);
+            ps.setString(13, email);
+            int result = ps.executeUpdate();
+            System.out.println("Edit result " + result);
+
+            if (result > 0) {
+                System.out.println("Update executed");
+                return Response.status(Response.Status.CREATED).build();
+            }
+
+            return Response.ok(member, MediaType.APPLICATION_JSON).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Edit ERROR " + ex);
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     public String generatePasswordSalt() {
@@ -271,22 +330,3 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
     }
 
 }
-
-
-/*
-For reference
-    @GET
-    @Path("itemname")
-    @Produces({"application/json"})
-    public String getItemNameBySKU(@QueryParam("SKU") String SKU) {
-        try {
-            Query q = em.createQuery("Select i from Itementity i where i.sku=:SKU and i.isdeleted=false");
-            q.setParameter("SKU", SKU);
-            Itementity item = (Itementity) q.getSingleResult();
-            return item.getName();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "";
-        }
-    }
-*/
