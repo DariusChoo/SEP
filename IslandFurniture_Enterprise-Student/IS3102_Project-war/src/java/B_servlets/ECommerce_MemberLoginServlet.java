@@ -27,8 +27,11 @@ public class ECommerce_MemberLoginServlet extends HttpServlet {
     private FacilityManagementBeanLocal facilityManagementBean;
 
     private String result;
+    
+
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("ENTERED LOGINS SERVLET");
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {

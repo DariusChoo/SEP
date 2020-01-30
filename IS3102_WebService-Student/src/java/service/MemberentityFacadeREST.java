@@ -102,7 +102,17 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             rs.next();
             String passwordSalt = rs.getString("PASSWORDSALT");
             String passwordHash = generatePasswordHash(passwordSalt, password);
-            if (passwordHash.equals(rs.getString("PASSWORDHASH"))) {
+            
+            System.out.println("USER INPUT: "+password);
+            System.out.println("DATABASE PASSWORD: "+rs.getString("password"));
+            
+//            if (passwordHash.equals(rs.getString("PASSWORDHASH"))) {
+//                return Response.ok(email, MediaType.APPLICATION_JSON).build();
+//            } else {
+//                System.out.println("Login credentials provided were incorrect, password wrong.");
+//                return Response.status(Response.Status.UNAUTHORIZED).build();
+//            }
+            if (password.equals(rs.getString("password"))) {
                 return Response.ok(email, MediaType.APPLICATION_JSON).build();
             } else {
                 System.out.println("Login credentials provided were incorrect, password wrong.");
