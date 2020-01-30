@@ -257,7 +257,21 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             String passwordSalt = generatePasswordSalt();
             String passwordHash = generatePasswordHash(passwordSalt, password);
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/islandfurniture-it07?zeroDateTimeBehavior=convertToNull&user=root&password=12345");
-            String stmt = "UPDATE `islandfurniture-it07`.memberentity m SET NAME=?, EMAIL=?, PHONE=?, CITY=?, ADDRESS=?, SECURITYQUESTION=?, SECURITYANSWER=?, AGE=?, INCOME=?, SERVICELEVELAGREEMENT=?, PASSWORDHASH=?, PASSWORDSALT=? WHERE m.EMAIL=?";
+            
+            //Get PASSWORDSALT
+            String stmt2 = "SELECT PASSWORDSALT FROM memberentity m WHERE m.EMAIL=?";
+            PreparedStatement ps2 = conn.prepareStatement(stmt2);
+            ps2.setString(1, email);
+            ResultSet rs2 = ps2.executeQuery();
+            while (rs2.next())
+                    passwordSalt = rs2.getString("PASSWORDSALT");
+            
+            System.out.println("Generated passwordSalt: "+passwordSalt);
+            String passwordHash = generatePasswordHash(passwordSalt, password);
+            System.out.println("Generated password hash: "+passwordHash);
+            
+            //Update member entity
+            String stmt = "UPDATE `islandfurniture-it07`.memberentity m SET NAME=?, EMAIL=?, PHONE=?, CITY=?, ADDRESS=?, SECURITYQUESTION=?, SECURITYANSWER=?, AGE=?, INCOME=?, SERVICELEVELAGREEMENT=?, PASSWORDHASH=?  WHERE m.EMAIL=?";
             PreparedStatement ps = conn.prepareStatement(stmt);
             ps.setString(1, name);
             ps.setString(2, email);
@@ -269,9 +283,8 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             ps.setInt(8, age);
             ps.setInt(9, income);
             ps.setInt(10, serviceLevelAgreement);
-            ps.setString(11, passwordSalt);
-            ps.setString(12, passwordHash);
-            ps.setString(13, email);
+            ps.setString(11, passwordHash);
+            ps.setString(12, email);
             int result = ps.executeUpdate();
             System.out.println("Edit result " + result);
 
