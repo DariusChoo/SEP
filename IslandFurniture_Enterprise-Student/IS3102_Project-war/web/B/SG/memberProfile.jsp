@@ -57,6 +57,7 @@
                     <%
                         try {
                             Member member = (Member) session.getAttribute("member");
+                            System.out.println("edit " + member.getEmail());
                             DecimalFormat df = new DecimalFormat("#.##");
                     %>
                     <div class="row" style="min-height: 500px;">
@@ -74,16 +75,18 @@
                             </ul>
                             <div class="tab-content">
                                 <div id="overview" class="tab-pane active">
-                                    <%if (member != null) {%>
+                                    <%if (member != null) {
+                                        System.out.println("Entered edit if statement");
+                                    %>
                                     <form role="form" action="../../ECommerce_MemberEditProfileServlet" onsubmit="return validatePassword()">
                                         <h4>Personal Information</h4>
                                         <div class="form-group">
                                             <label>Name</label>
-                                            <input class="form-control" required="true" name="name" type="text" value="<%= member.getEmail() %>">
+                                            <input class="form-control" required="true" name="name" type="text" value="<%= member.getName() %>">
                                         </div>
                                         <div class="form-group">
                                             <label>E-mail Address</label>
-                                            <input class="form-control" required="true" value="<%= member.getEmail() %>" disabled/>
+                                            <input class="form-control" required="true" name="email" value="<%= member.getEmail() %>" disabled/>
                                         </div>
                                         <div class="form-group">
                                             <label>Phone</label>
@@ -92,7 +95,7 @@
                                         <div class="form-group">
                                             <label>Country</label>
                                             <%if (member.getCity() != null && member.getCity() != "") {%>
-                                            <select name="country" disabled>
+                                            <select name="country">
                                                 <option value="<%=member.getCity()%>"><%=member.getCity()%></option>
                                                 <%} else {%>
                                                 <select name="country">
@@ -349,7 +352,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Address</label>
-                                            <input class="form-control" type="text" required="true" name="address" value="">
+                                            <input class="form-control" type="text" required="true" name="address" value="<%=member.getAddress()%>">
                                         </div>
                                         <div class="form-group">
                                             <label>Set Challenge Question</label>
@@ -378,11 +381,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Age</label>
-                                            <input class="form-control" name="age" step="1" type="number" min="1" max="150" value="">
+                                            <input class="form-control" name="age" step="1" type="number" min="1" max="150" value="<%=member.getAge()%>">
                                         </div>
                                         <div class="form-group">
                                             <label>Income per annum (in USD)</label>
-                                            <input class="form-control" name="income" step="1" type="number" min="0" max="2147483646" value="">
+                                            <input class="form-control" name="income" step="1" type="number" min="0" max="2147483646" value="<%=member.getIncome()%>">
                                         </div>
                                         <div class="form-group">
                                             <input type="checkbox" name="serviceLevelAgreement"> Allow us to use your particulars to serve you better?<br/>Checking the box above indicates that you agree to our <a onclick="pdpaWindow()">personal data protection policy.</a>
@@ -416,6 +419,7 @@
                 <%
                         session.removeAttribute("member");
                     } catch (Exception ex) {
+                        System.out.println("FAILED EDIT");
                         ex.printStackTrace();
                         response.sendRedirect("index.jsp");
                     }%>

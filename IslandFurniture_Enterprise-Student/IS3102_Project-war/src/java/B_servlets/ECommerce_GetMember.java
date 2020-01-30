@@ -67,16 +67,6 @@ public class ECommerce_GetMember extends HttpServlet {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             System.out.println("success");
             Member mem = (Member) res.readEntity(Member.class);
-            
-//            out.println("Member's cumulative spending: "+mem.getCumulativeSpending());
-//            out.println("Member's email: "+mem.getEmail());
-//            out.println("Member's loyalty points: "+mem.getLoyaltyPoints());
-//            out.println("Member's address: "+mem.getAddress());
-//            out.println("Member's age: "+mem.getAge());
-//            out.println("Member's city: "+mem.getCity());
-//            out.println("Member's income: "+mem.getIncome());
-//            out.println("Member's name: "+mem.getName());
-//            out.println("Member's phone: "+mem.getPhone());
 
             session.setAttribute("member",mem);
             System.out.println("Member attribute set");
@@ -86,17 +76,6 @@ public class ECommerce_GetMember extends HttpServlet {
         } else {
             System.out.println("failed");
         }
-                
-//        if (res.getStatus() == 200) {
-//            Member memdata = res.readEntity(Member.class);
-//            
-//            request.setAttribute("user", memdata.);
-//            RequestDispatcher rd = request.getRequestDispatcher("memberProfile.jsp");
-//            rd.forward(request, response);
-//            
-//        } else {
-//            out.println("No such User, Please check again!");
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -139,54 +118,3 @@ public class ECommerce_GetMember extends HttpServlet {
     }// </editor-fold>
 
 }
-
-/*
-Just for reference
-
-public class ECommerce_FurnitureCategoryServlet extends HttpServlet {
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            HttpSession session = request.getSession();
-            String category = URLDecoder.decode(request.getParameter("cat"));
-            Long countryID = (Long) session.getAttribute("countryID");
-
-            List<Furniture> furniture = retrieveFurnitureByCategoryRESTful(countryID, category);
-            session.setAttribute("furnitures", furniture);
-            String categoryEncoded = URLEncoder.encode(category);
-
-            if (furniture == null) {
-                response.sendRedirect("/IS3102_Project-war/B/SG/furnitureCategory.jsp?cat=" + categoryEncoded + "&errorMsg=No furniture to be displayed.");
-                return;
-            }
-            response.sendRedirect("/IS3102_Project-war/B/SG/furnitureCategory.jsp?cat=" + categoryEncoded);
-        } catch (Exception ex) {
-            out.println("\n\n " + ex.getMessage());
-        }
-    }
-
-    public List<Furniture> retrieveFurnitureByCategoryRESTful(Long countryID, String category) {
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client
-                .target("http://localhost:8080/IS3102_WebService-Student/webresources/entity.furnitureentity").path("getFurnitureListByCategory")
-                .queryParam("countryID", countryID)
-                .queryParam("category", category);
-        Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header("some-header", "true");
-        Response response = invocationBuilder.get();
-        System.out.println("status: " + response.getStatus());
-
-        if (response.getStatus() != 200) {
-            return null;
-        }
-
-        List<Furniture> list = response.readEntity(new GenericType<List<Furniture>>() {
-        });
-        System.out.println("list size: " + list.size());
-        return list;
-    }
-
-    */
