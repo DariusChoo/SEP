@@ -102,12 +102,20 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             rs.next();
             String passwordSalt = rs.getString("PASSWORDSALT");
             String passwordHash = generatePasswordHash(passwordSalt, password);
+            
+            System.out.println("RS GET STRING: "+rs.getString("password"));
+            System.out.println("RS GET HASH: "+rs.getString("PASSWORDHASH"));
+            System.out.println("USER HASH: "+passwordHash);
+            System.out.println("USER INPUT: "+password);
+
             if (passwordHash.equals(rs.getString("PASSWORDHASH"))) {
                 return Response.ok(email, MediaType.APPLICATION_JSON).build();
             } else {
                 System.out.println("Login credentials provided were incorrect, password wrong.");
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
+            
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -174,6 +182,63 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             return Response.ok(member, MediaType.APPLICATION_JSON).build();
         } catch (Exception ex) {
             ex.printStackTrace();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    //this function is used by ECommerce_MemberEditProfileServlet to edit Member data
+    @PUT
+    @Path("editMember")
+    @Consumes("application/json")
+    public Response editMember(@QueryParam("name") String name, @QueryParam("email") String email, @QueryParam("phone") String phone, @QueryParam("city") String city, @QueryParam("address") String address, @QueryParam("securityQuestion") String securityQuestion, @QueryParam("securityAnswer") String securityAnswer, @QueryParam("age") int age, @QueryParam("income") int income, @QueryParam("serviceLevelAgreement") int serviceLevelAgreement, @QueryParam("password") String password) {
+
+        System.out.println("Edit service");
+        System.out.println("Checking Query param: " + name + email + phone + city + address + securityQuestion + securityAnswer + age + income + serviceLevelAgreement + password);
+
+        try {
+            Member member = new Member();
+            String passwordSalt = "";
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/islandfurniture-it07?zeroDateTimeBehavior=convertToNull&user=root&password=12345");
+            
+            //Get PASSWORDSALT
+            String stmt2 = "SELECT PASSWORDSALT FROM memberentity m WHERE m.EMAIL=?";
+            PreparedStatement ps2 = conn.prepareStatement(stmt2);
+            ps2.setString(1, email);
+            ResultSet rs2 = ps2.executeQuery();
+            while (rs2.next())
+                    passwordSalt = rs2.getString("PASSWORDSALT");
+            
+            System.out.println("Generated passwordSalt: "+passwordSalt);
+            String passwordHash = generatePasswordHash(passwordSalt, password);
+            System.out.println("Generated password hash: "+passwordHash);
+            
+            //Update member entity
+            String stmt = "UPDATE `islandfurniture-it07`.memberentity m SET NAME=?, EMAIL=?, PHONE=?, CITY=?, ADDRESS=?, SECURITYQUESTION=?, SECURITYANSWER=?, AGE=?, INCOME=?, SERVICELEVELAGREEMENT=?, PASSWORDHASH=?  WHERE m.EMAIL=?";
+            PreparedStatement ps = conn.prepareStatement(stmt);
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            ps.setString(4, city);
+            ps.setString(5, address);
+            ps.setString(6, securityQuestion);
+            ps.setString(7, securityAnswer);
+            ps.setInt(8, age);
+            ps.setInt(9, income);
+            ps.setInt(10, serviceLevelAgreement);
+            ps.setString(11, passwordHash);
+            ps.setString(12, email);
+            int result = ps.executeUpdate();
+            System.out.println("Edit result " + result);
+
+            if (result > 0) {
+                System.out.println("Update executed");
+                return Response.status(Response.Status.CREATED).build();
+            }
+
+            return Response.ok(member, MediaType.APPLICATION_JSON).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Edit ERROR " + ex);
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
