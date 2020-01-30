@@ -114,6 +114,12 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
                 System.out.println("Login credentials provided were incorrect, password wrong.");
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
+//            if (password.equals(rs.getString("password"))) {
+//                return Response.ok(email, MediaType.APPLICATION_JSON).build();
+//            } else {
+//                System.out.println("Login credentials provided were incorrect, password wrong.");
+//                return Response.status(Response.Status.UNAUTHORIZED).build();
+//            }
             
             
         } catch (Exception ex) {
@@ -213,7 +219,7 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             System.out.println("Generated password hash: "+passwordHash);
             
             //Update member entity
-            String stmt = "UPDATE `islandfurniture-it07`.memberentity m SET NAME=?, EMAIL=?, PHONE=?, CITY=?, ADDRESS=?, SECURITYQUESTION=?, SECURITYANSWER=?, AGE=?, INCOME=?, SERVICELEVELAGREEMENT=?, PASSWORDHASH=?  WHERE m.EMAIL=?";
+            String stmt = "UPDATE `islandfurniture-it07`.memberentity m SET NAME=?, EMAIL=?, PHONE=?, CITY=?, ADDRESS=?, SECURITYQUESTION=?, SECURITYANSWER=?, AGE=?, INCOME=?, SERVICELEVELAGREEMENT=?, PASSWORDHASH=?, password=?  WHERE m.EMAIL=?";
             PreparedStatement ps = conn.prepareStatement(stmt);
             ps.setString(1, name);
             ps.setString(2, email);
@@ -226,7 +232,8 @@ public class MemberentityFacadeREST extends AbstractFacade<Memberentity> {
             ps.setInt(9, income);
             ps.setInt(10, serviceLevelAgreement);
             ps.setString(11, passwordHash);
-            ps.setString(12, email);
+            ps.setString(12, password);
+            ps.setString(13, email);
             int result = ps.executeUpdate();
             System.out.println("Edit result " + result);
 
